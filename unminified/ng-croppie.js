@@ -10,8 +10,8 @@
  * Allen Royston
  * Version: 1.0.0
  *************************/
-angular.module('ngCroppie', []).directive('ngCroppie', [
-  function ($compile) {
+angular.module('ngCroppie', []).directive('ngCroppie', ['$compile','$timeout',
+  function ($compile,$timeout) {
     return {
         restrict: 'AE',
         scope:{
@@ -93,6 +93,18 @@ angular.module('ngCroppie', []).directive('ngCroppie', [
                               scope.ngModel = img
                             })
                           })
+                          //applied bind to get unchanged image calculation.
+                            if(oldValue === undefined){
+                              $timeout(function(){
+                                c.bind(scope.src);
+                                c.result('canvas').then(function(img){
+                                  scope.$apply(function(){
+                                    scope.ngModel = img
+                                  })
+                                })
+                              },500)
+                            }
+                          }
                     }
               })
 
