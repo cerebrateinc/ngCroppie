@@ -71,6 +71,7 @@ angular.module('ngCroppie', []).directive('ngCroppie', ['$compile','$timeout',
                 // create new croppie and settime for updates
                 var c = new Croppie(elem[0], options);
                 var intervalID = window.setInterval(function(){
+                  c.bind();
                   c.result('canvas').then(function(img){
                     scope.$apply(function(){
                       scope.ngModel = img
@@ -87,24 +88,12 @@ angular.module('ngCroppie', []).directive('ngCroppie', ['$compile','$timeout',
                 // respond to changes in src
                 scope.$watch('src', function(newValue, oldValue) {
                     if(scope.src != undefined){
-                          c.bind(scope.src);
-                          c.result('canvas').then(function(img){
-                            scope.$apply(function(){
-                              scope.ngModel = img
-                            })
+                        c.bind(scope.src);
+                        c.result('canvas').then(function(img){
+                          scope.$apply(function(){
+                            scope.ngModel = img
                           })
-                          //applied bind to get unchanged image calculation.
-                            if(oldValue === undefined){
-                              $timeout(function(){
-                                c.bind(scope.src);
-                                c.result('canvas').then(function(img){
-                                  scope.$apply(function(){
-                                    scope.ngModel = img
-                                  })
-                                })
-                              },500)
-                            }
-                          }
+                        })
                     }
               })
 
